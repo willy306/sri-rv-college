@@ -62,6 +62,7 @@ select{width:100%;padding:10px;border:1px solid var(--line);border-radius:6px;ba
 .ntab.m{min-width:92px}
 .act{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 <div class="wrap" id="app"></div>
@@ -193,6 +194,7 @@ function assignView(){
   var local=!(A&&DB);
   if(local&&!lloaded){lloaded=true;lall().then(function(r){items=r;assignView()}).catch(function(){})}
   var h='<header><div><h1>Sri RV College</h1><p class="sub">Assignments</p></div><button id="out">Sign out</button></header>'+navHtml();
+  h+=dailyHtml();
   if(local)h+='<p class="hint">PDFs you add here are saved on this device and browser only. They will not appear on other devices.</p>';
   {
     h+='<section class="rep"><h2>Upload assignment (PDF)</h2><div class="edit"><input id="at" placeholder="Assignment title" aria-label="Assignment title"><select id="ab" aria-label="Batch"><option>KCET-2</option><option>MED-1</option><option>1st SRG-E</option></select><label for="ad">Due date</label><input id="ad" type="date"><input id="af" type="file" accept="application/pdf,.pdf" aria-label="PDF file"><div class="row"><button class="pri" id="aup">Upload PDF</button></div><p class="err" id="am" role="status">'+esc(amsg)+'</p></div></section>';
@@ -206,6 +208,9 @@ function assignView(){
   }
   document.getElementById("app").innerHTML=h;bindNav();
   document.getElementById("out").onclick=function(){authed=false;try{sessionStorage.removeItem(AUTH)}catch(e){}loginView()};
+  document.querySelectorAll("[data-g]").forEach(function(b){b.onclick=function(){dlPdf(b.dataset.g)}});
+  var gb=document.getElementById("gen");if(gb)gb.onclick=function(){var td=iso(new Date());autoTried=true;genDay(td,PM[td])};
+  autoGen();
   document.querySelectorAll("[data-b]").forEach(function(b){b.onclick=function(){abatch=b.dataset.b;assignView()}});
   var up=document.getElementById("aup");
   if(up)up.onclick=function(){
@@ -250,10 +255,78 @@ function planView(){
   document.querySelectorAll("[data-m]").forEach(function(b){b.onclick=function(){pmonth=b.dataset.m;planView()}});
   var el=document.getElementById("ptoday");if(el&&el.scrollIntoView)el.scrollIntoView({block:"center"});
 }
+var SM=null,DLC=null,daily=[],dailyLoaded=false,genBusy=false,gmsg="",autoTried=false;
+function ascii(s){return String(s==null?"":s).replace(/[\u2018\u2019]/g,"'").replace(/[\u201c\u201d]/g,'"').replace(/[\u2013\u2014]/g,"-").replace(/[^\x20-\x7e\u00b0\u00b2\u00b3\u00b7\u00d7\u00f7]/g,"?")}
+function setG(m){gmsg=m;var e=document.getElementById("gm");if(e)e.textContent=m}
+function topicCtx(date){var o=[];PLAN.forEach(function(r){if(r[0]<date&&ptype(r[1])==="class")o.push(r[1])});return o.slice(-3).join(" || ")}
+function genPrompt(date,topic,part){
+  return "You are a physics teacher writing a daily practice set for 1st PUC (Class 11) students preparing for JEE Main and NEET.\nTopic for "+date+": "+topic+"\nRecently taught topics (use for context if today's topic is generic, such as 'problems on the above topic'): "+topicCtx(date)+"\nWrite "+part[1]+"\nRules: base the content on the NCERT Class 11 Physics syllabus for this topic; exactly 4 options per question and exactly one correct option; work out every numerical answer carefully and double-check each key; vary the difficulty and do not repeat questions; plain ASCII text only (no LaTeX, no Greek letters: write theta, omega; use ^ for powers, sqrt() for roots, * for multiplication); use SI units and g = 10 m/s^2 unless stated.\nReturn ONLY a JSON array with no other text. Each item: {\"q\":question text,\"o\":[four option texts without letters],\"a\":index 0-3 of the correct option,\"f\":key formula used,\"h\":one-line hint}\nVariation seed: "+date+"-"+part[0];
+}
+function genDay(date,topic){
+  if(genBusy||!SM||!DB)return;genBusy=true;
+  var all=[],parts=[["A","25 NEET-style MCQs: NCERT-based conceptual, formula-recall and simple numerical questions (easy to medium)."],["B","25 JEE Main-style MCQs: numerical and application problems (medium to hard)."]];
+  function ok(q){return q&&typeof q.q==="string"&&Array.isArray(q.o)&&q.o.length===4&&[0,1,2,3].indexOf(Number(q.a))>=0}
+  function run(i){
+    if(i>=parts.length)return Promise.resolve();
+    setG("Generating questions, part "+(i+1)+" of 2. This can take a minute or two.");
+    return SM.json(genPrompt(date,topic,parts[i]),{modelTier:"default"}).then(function(a){
+      if(!Array.isArray(a))throw {code:"format"};
+      a.filter(ok).forEach(function(q){q.a=Number(q.a);all.push(q)});
+      return run(i+1);
+    });
+  }
+  run(0).then(function(){
+    if(all.length<40)throw {code:"too_few_questions"};
+    return DB.collection("daily").doc(date).set({date:date,topic:topic,qs:all,at:Date.now()});
+  }).then(function(){genBusy=false;setG("Ready. Today's set is listed below.")})
+  .catch(function(e){genBusy=false;autoTried=true;setG("Could not finish ("+((e&&e.code)||"error")+"). Press Generate to try again.")})
+  .then(function(){if(view==="as")assignView()});
+}
+function autoGen(){
+  if(!SM||!DB||!dailyLoaded||genBusy||autoTried)return;
+  var td=iso(new Date()),t=PM[td];
+  if(ptype(t)!=="class"||daily.some(function(d){return d.id===td}))return;
+  autoTried=true;genDay(td,t);
+}
+function dailyHtml(){
+  var td=iso(new Date()),t=PM[td],ty=ptype(t),h='<section class="rep hl"><h2>Daily practice set</h2>';
+  if(!SM||!DB)return h+'<p class="sub">A new set of 50 JEE Main and NEET style MCQs, with formulas, hints and an answer key, is created each class day on the claude.ai link while you are signed in. It appears here with a Download PDF button.</p></section>';
+  var have=daily.some(function(d){return d.id===td});
+  h+='<p class="sub">'+(ty==="class"?'Today: '+esc(String(t).slice(0,140)):'No class topic today ('+PL[ty]+').')+'</p><p class="err" id="gm" role="status">'+esc(gmsg)+'</p>';
+  if(ty==="class"&&!have)h+='<div class="row" style="margin-top:8px"><button class="pri" id="gen"'+(genBusy?' disabled':'')+'>'+(genBusy?'Generating\u2026':'Generate today\'s 50 MCQs')+'</button></div>';
+  h+='</section>';
+  if(daily.length){
+    h+='<div class="sum"><h2>Daily sets</h2><span>'+daily.length+' PDF'+(daily.length===1?'':'s')+'</span></div>';
+    daily.forEach(function(d){
+      var dt=new Date(d.date+"T00:00");
+      h+='<div class="slot"><div class="time">'+dt.toLocaleDateString("en-IN",{day:"numeric",month:"short"})+'</div><div><b>'+esc(String(d.topic||"").slice(0,90))+'</b><small>'+(d.qs?d.qs.length:0)+' MCQs \u00b7 JEE Main and NEET \u00b7 key, formulas, hints</small></div><div class="act"><button class="pri" data-g="'+esc(d.id)+'">Download PDF</button></div></div>';
+    });
+  }
+  return h;
+}
+function dlPdf(date){
+  var d=daily.filter(function(x){return x.id===date})[0],J=window.jspdf&&window.jspdf.jsPDF;
+  if(!d||!J){setG("The PDF tool could not load. Check your internet connection and try again.");return}
+  var doc=new J({unit:"mm",format:"a4"}),y=18,L="ABCD";
+  function ln(t,sz,b,gap){doc.setFont("helvetica",b?"bold":"normal");doc.setFontSize(sz);doc.splitTextToSize(ascii(t),188).forEach(function(s){if(y>282){doc.addPage();y=16}doc.text(s,11,y);y+=sz*0.42+1.4});y+=gap||0}
+  ln("Sri RV College - 1st PUC Physics",15,true,1);
+  ln("Daily practice: "+d.date+" | "+d.qs.length+" MCQs (JEE Main and NEET pattern)",10,false,1);
+  ln("Topic: "+d.topic,10,false,3);
+  d.qs.forEach(function(q,i){ln((i+1)+". "+q.q,10.5,true,0.5);q.o.forEach(function(o,k){ln("("+L[k]+") "+o,10,false,0)});y+=2.5});
+  doc.addPage();y=16;
+  ln("Answer key",13,true,2);
+  var row=[];d.qs.forEach(function(q,i){row.push((i+1)+"-"+L[q.a]);if(row.length===10||i===d.qs.length-1){ln(row.join("   "),10,false,0);row=[]}});
+  y+=4;ln("Formulas and hints",13,true,2);
+  d.qs.forEach(function(q,i){ln((i+1)+". ["+L[q.a]+"] Formula: "+(q.f||"-")+"  |  Hint: "+(q.h||"-"),9.5,false,1)});
+  y+=3;ln("These questions are AI-generated. Check the answers before using them in class.",8.5,false,0);
+  var fn="Physics-MCQ-"+d.date+".pdf";
+  if(DLC)DLC.save({filename:fn,data:doc.output("blob")}).catch(function(){});else doc.save(fn);
+}
 function initCaps(){
   if(!(window.claude&&window.claude.use))return;
-  Promise.all([window.claude.use("assets"),window.claude.use("db")]).then(function(r){
-    A=r[0];DB=r[1];
+  Promise.all([window.claude.use("assets"),window.claude.use("db"),window.claude.use("sample"),window.claude.use("downloads")]).then(function(r){
+    A=r[0];DB=r[1];SM=r[2];DLC=r[3];
+    if(DB)DB.collection("daily").onSnapshot(function(sn){daily=sn.docs.map(function(d){var x=d.data()||{};x.id=d.id;return x}).sort(function(a,b){return b.date>a.date?1:-1});dailyLoaded=true;if(authed&&view==="as"&&!genBusy)assignView()},function(){});
     if(DB)DB.collection("assignments").onSnapshot(function(sn){
       items=sn.docs.map(function(d){var x=d.data()||{};x.id=d.id;return x}).sort(function(a,b){return (b.at||0)-(a.at||0)});
       if(authed&&view==="as")assignView();
