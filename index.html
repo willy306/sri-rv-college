@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sri RV College</title>
+<style>
+:root{--bg:#eef3f6;--grid:#d5e0e7;--ink:#12263a;--mute:#5b6f80;--card:#fbfdfe;--line:#c3d2dc;--acc:#1f7a8c;--acc2:#b5532a;--brk:#e7edf1;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1b26;--grid:#192a38;--ink:#e4edf3;--mute:#93a7b6;--card:#15242f;--line:#2b4152;--acc:#4fb3c6;--acc2:#e08a5e;--brk:#1b2e3b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1b26;--grid:#192a38;--ink:#e4edf3;--mute:#93a7b6;--card:#15242f;--line:#2b4152;--acc:#4fb3c6;--acc2:#e08a5e;--brk:#1b2e3b;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background-color:var(--bg);color:var(--ink);font-family:"Source Serif 4",Georgia,"Times New Roman",serif;line-height:1.55;
+background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px}
+h1,h2,h3,button,input,label,.tab,.time{font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:22px}
+h1{font-size:clamp(1.9rem,6vw,2.8rem);margin:0;letter-spacing:-.02em;line-height:1.1}
+.sub{color:var(--mute);margin:6px 0 0}
+button{cursor:pointer;font-size:.95rem;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px}
+button.pri{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+button:focus-visible,input:focus-visible,.tab:focus-visible{outline:3px solid var(--acc2);outline-offset:2px}
+.login{max-width:380px;margin:12vh auto 0;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--acc);padding:26px}
+.login h2{margin:0 0 4px;font-size:1.4rem}
+.login label{display:block;margin:14px 0 4px;font-size:.9rem;color:var(--mute)}
+input{width:100%;padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font-size:1rem}
+.err{color:var(--acc2);min-height:1.4em;margin:10px 0 0;font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:.9rem}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px}
+.tab{flex:1 0 auto;min-width:72px;padding:10px 12px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;font-size:.95rem}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sum{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.sum h2{margin:0;font-size:1.3rem}
+.sum span{color:var(--mute);font-family:"IBM Plex Sans",system-ui,sans-serif}
+.slot{display:grid;grid-template-columns:96px 1fr auto;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--acc);padding:12px 14px;margin-bottom:8px}
+.slot.brk{background:var(--brk);border-left-color:var(--line);color:var(--mute)}
+.time{font-weight:600;font-size:.9rem;white-space:nowrap}
+.slot b{display:block;font-size:1.05rem}
+.slot small{color:var(--mute)}
+.edit{grid-column:1/-1;display:grid;gap:8px}
+.edit .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.edit label{font-size:.9rem;display:flex;gap:6px;align-items:center}
+.edit input[type=checkbox]{width:auto}
+.hint{color:var(--mute);font-size:.88rem;margin-top:16px}
+@media(max-width:520px){.slot{grid-template-columns:1fr auto}.time{grid-column:1/-1}}
+.rep{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--line);padding:14px 16px;margin-bottom:18px}
+.rep.hl{border-left-color:var(--acc2)}
+.rep h2{margin:0 0 2px;font-size:1.1rem}
+.rep .big{margin:0;font-size:1.5rem;font-weight:600;font-family:"IBM Plex Sans",system-ui,sans-serif}
+.rep .sub{margin:2px 0 0}
+.days{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.days span{flex:1 0 74px;border:1px solid var(--line);padding:6px 8px;font-size:.85rem;text-align:center;font-family:"IBM Plex Sans",system-ui,sans-serif}
+.chip{display:inline-block;margin-left:8px;font-size:.78rem;padding:1px 8px;border-radius:10px;border:1px solid var(--line);color:var(--mute);font-family:"IBM Plex Sans",system-ui,sans-serif}
+.chip.done{color:var(--acc);border-color:var(--acc)}
+.chip.live{color:var(--acc2);border-color:var(--acc2);font-weight:600}
+.slot.live{border-left-color:var(--acc2)}
+.slot.skip{opacity:.65}
+select{width:100%;padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font-size:1rem}
+.ntab{flex:1 0 auto;min-width:120px;padding:10px 12px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;font-size:.95rem}
+.ntab[aria-selected="true"]{background:var(--acc);color:#fff;border-color:var(--acc)}
+.btn{display:inline-block;padding:8px 14px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);text-decoration:none;font-size:.95rem;font-family:"IBM Plex Sans",system-ui,sans-serif}
+.ntab.m{min-width:92px}
+.act{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+var DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+var KEY="srirv_schedule_v4", SKIP="srirv_skips_v1", AUTH="srirv_auth";
+var SLOTS=[
+{time:"8:00 – 9:15 AM",s:480,e:555,m:75,t:"KCET-2",n:"Physics · P-RC"},
+{time:"9:15 – 9:45 AM",s:555,e:585,brk:true,t:"Breakfast",n:""},
+{time:"9:45 – 11:00 AM",s:585,e:660,m:75,t:"KCET-2",n:"Physics · P-RC"},
+{time:"11:00 AM – 12:15 PM",s:660,e:735,m:75,t:"MED-1",n:"Physics · P-RC · Study Hour"},
+{time:"12:20 – 1:20 PM",s:740,e:800,m:60,t:"1st SRG-E",n:"Physics · P-RC · Study Hour"},
+{time:"1:20 – 2:00 PM",s:800,e:840,brk:true,t:"Lunch break",n:""},
+{time:"4:10 – 5:00 PM",s:970,e:1020,brk:true,t:"Snacks",n:""}
+];
+function defaults(){var d={};DAYS.forEach(function(day){d[day]=SLOTS.map(function(s){return {time:s.time,s:s.s,e:s.e,m:s.m||0,brk:!!s.brk,t:s.t,n:s.n}})});return d}
+var data=defaults(), skips={}, editing=null, authed=false;
+var TI=(new Date().getDay()+6)%7, tab=TI<6?TI:0;
+try{var sv=localStorage.getItem(KEY);if(sv)data=JSON.parse(sv)}catch(e){}
+try{skips=JSON.parse(localStorage.getItem(SKIP)||"{}")}catch(e){}
+try{authed=sessionStorage.getItem(AUTH)==="1"}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}}
+function saveSkips(){try{localStorage.setItem(SKIP,JSON.stringify(skips))}catch(e){}}
+function esc(x){return String(x).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function pad(n){return n<10?"0"+n:""+n}
+function weekKey(){var n=new Date(),i=(n.getDay()+6)%7,m=new Date(n.getFullYear(),n.getMonth(),n.getDate()-i);return m.getFullYear()+"-"+pad(m.getMonth()+1)+"-"+pad(m.getDate())}
+var START=new Date(2026,9,29);
+function dayDate(di){var n=new Date(),ti=(n.getDay()+6)%7;return new Date(n.getFullYear(),n.getMonth(),n.getDate()-ti+di)}
+function sk(di,i){return weekKey()+"|"+di+"|"+i}
+function status(di,i,s){
+  if(s.brk)return "break";
+  if(dayDate(di)<START)return "before";
+  if(skips[sk(di,i)])return "skipped";
+  var n=new Date(),ti=(n.getDay()+6)%7,m=n.getHours()*60+n.getMinutes();
+  if(di<ti)return "done"; if(di>ti)return "upcoming";
+  return m>=s.e?"done":(m>=s.s?"live":"upcoming");
+}
+function weekStats(){
+  var r={per:[],done:0,total:0,mins:0,skip:0};
+  DAYS.forEach(function(d,di){var c=0,t=0;
+    data[d].forEach(function(s,i){if(s.brk)return;var st=status(di,i,s);if(st==="before")return;t++;
+      if(st==="done"){c++;r.mins+=s.m||0}if(st==="skipped")r.skip++});
+    r.done+=c;r.total+=t;r.per.push({d:d,c:c,t:t})});
+  return r;
+}
+function monthStats(){
+  var n=new Date(),y=n.getFullYear(),mo=n.getMonth(),r={done:0,mins:0,total:0},nm=n.getHours()*60+n.getMinutes();
+  var last=new Date(y,mo+1,0).getDate(),td=new Date(y,mo,n.getDate());
+  for(var d=1;d<=last;d++){
+    var dt=new Date(y,mo,d),dow=(dt.getDay()+6)%7;if(dow===6)continue;if(dt<START)continue;
+    var ws=new Date(y,mo,d-dow),wk=ws.getFullYear()+"-"+pad(ws.getMonth()+1)+"-"+pad(ws.getDate());
+    data[DAYS[dow]].forEach(function(s,i){
+      if(s.brk)return;r.total++;
+      if(skips[wk+"|"+dow+"|"+i])return;
+      if(dt<td||(d===n.getDate()&&nm>=s.e)){r.done++;r.mins+=s.m||0}
+    });
+  }
+  return r;
+}
+var LABEL={before:"Before start",done:"Completed",live:"In progress",upcoming:"Upcoming",skipped:"Not held"};
+
+function loginView(msg){
+  document.getElementById("app").innerHTML=
+  '<h1 style="text-align:center">Sri RV College</h1><p class="sub" style="text-align:center">Physics teaching schedule</p>'+
+  '<div class="login"><h2>Admin sign in</h2><p class="sub">Enter your details to open the timetable.</p>'+
+  '<label for="u">Username</label><input id="u" autocomplete="username">'+
+  '<label for="p">Password</label><input id="p" type="password" autocomplete="current-password">'+
+  '<p class="err" id="err" role="alert">'+(msg||"")+'</p>'+
+  '<button class="pri" id="go" style="width:100%">Sign in</button></div>';
+  var go=function(){
+    var u=document.getElementById("u").value.trim(),p=document.getElementById("p").value;
+    if(u==="admin"&&p==="password"){authed=true;try{sessionStorage.setItem(AUTH,"1")}catch(e){}mainView()}
+    else loginView("Wrong username or password. Try again.");
+  };
+  document.getElementById("go").onclick=go;
+  document.getElementById("p").onkeydown=function(e){if(e.key==="Enter")go()};
+}
+
+function mainView(){
+  TI=(new Date().getDay()+6)%7;
+  var day=DAYS[tab], slots=data[day], w=weekStats(), ms=monthStats(), mn=new Date().toLocaleDateString("en-IN",{month:"long",year:"numeric"});
+  var today=new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  var h='<header><div><h1>Sri RV College</h1><p class="sub">'+today+(TI===6?' · Sunday, no classes':'')+'</p></div><button id="out">Sign out</button></header>'+navHtml();
+  h+='<section class="rep'+(TI>=5?' hl':'')+'"><h2>'+(TI===5?'Saturday report':TI===6?'Week report':'This week')+'</h2>'+
+     '<p class="big">'+w.done+' of '+w.total+' classes completed</p>'+
+     '<p class="sub">'+Math.floor(w.mins/60)+' h '+w.mins%60+' min taught'+(w.skip?' · '+w.skip+' not held':'')+'</p>'+
+     '<p class="sub"><b>'+mn+':</b> '+ms.done+' of '+ms.total+' classes completed · '+Math.floor(ms.mins/60)+' h '+ms.mins%60+' min taught</p>'+
+     '<div class="days">'+w.per.map(function(p){return '<span><b>'+p.d.slice(0,3)+'</b> '+(p.t?p.c+'/'+p.t:'–')+'</span>'}).join("")+'</div></section>';
+  h+='<div class="tabs" role="tablist">'+DAYS.map(function(d,i){return '<button class="tab" role="tab" aria-selected="'+(i===tab)+'" data-i="'+i+'">'+d.slice(0,3)+(i===TI?' (today)':'')+'</button>'}).join("")+'</div>';
+  h+='<div class="sum"><h2>'+day+'</h2><span>4 P-RC classes · 4 h 45 min</span></div>';
+  var pt=PM[iso(dayDate(tab))],ty=ptype(pt);
+  h+='<section class="rep'+(ty==="class"?' hl':'')+'"><h2>Topic for '+day+'</h2><p class="sub"><span class="chip '+(ty==="class"?'done':'')+'" style="margin:0 6px 0 0">'+PL[ty]+'</span>'+esc(pt||"Nothing planned yet")+'</p></section>';
+  slots.forEach(function(s,i){
+    var st=status(tab,i,s);
+    h+='<div class="slot'+(s.brk?' brk':'')+(st==='live'?' live':'')+(st==='skipped'?' skip':'')+'"><div class="time">'+esc(s.time)+'</div>';
+    h+='<div><b>'+esc(s.t||"Free")+'</b>'+(s.n?'<small>'+esc(s.n)+'</small>':'')+(s.brk?'':'<span class="chip '+st+'">'+LABEL[st]+'</span>')+'</div>';
+    h+='<div class="act">'+(s.brk||st==="before"?'':'<button data-k="'+i+'">'+(st==="skipped"?'Mark held':'Not held')+'</button>')+'<button data-e="'+i+'">'+(editing===i?'Close':'Edit')+'</button></div>';
+    if(editing===i){
+      h+='<div class="edit"><input id="et" value="'+esc(s.t)+'" aria-label="Class title"><input id="en" value="'+esc(s.n)+'" aria-label="Topic or note">'+
+      '<div class="row"><label><input type="checkbox" id="eb"'+(s.brk?' checked':'')+'> This is a break</label>'+
+      '<button class="pri" data-s="'+i+'">Save changes</button></div></div>';
+    }
+    h+='</div>';
+  });
+  h+='<p class="hint">The timetable starts on 29 October 2026. Classes are marked completed automatically as their time passes, and the weekly count resets every Monday. Use "Not held" if a class did not take place. Data is saved in this browser only.</p>';
+  document.getElementById("app").innerHTML=h;bindNav();
+  document.getElementById("out").onclick=function(){authed=false;try{sessionStorage.removeItem(AUTH)}catch(e){}loginView()};
+  document.querySelectorAll(".tab").forEach(function(b){b.onclick=function(){tab=+b.dataset.i;editing=null;mainView()}});
+  document.querySelectorAll("[data-e]").forEach(function(b){b.onclick=function(){var i=+b.dataset.e;editing=editing===i?null:i;mainView()}});
+  document.querySelectorAll("[data-k]").forEach(function(b){b.onclick=function(){var k=sk(tab,+b.dataset.k);if(skips[k])delete skips[k];else skips[k]=true;saveSkips();mainView()}});
+  document.querySelectorAll("[data-s]").forEach(function(b){b.onclick=function(){
+    var i=+b.dataset.s,o=data[day][i];
+    data[day][i]={time:o.time,s:o.s,e:o.e,m:o.m,t:document.getElementById("et").value.trim(),n:document.getElementById("en").value.trim(),brk:document.getElementById("eb").checked};
+    save();editing=null;mainView();
+  }});
+}
+var view="tt", A=null, DB=null, items=[], amsg="", abatch="All";
+function navHtml(){return '<div class="tabs"><button class="ntab" data-v="tt" aria-selected="'+(view==="tt")+'">Timetable</button><button class="ntab" data-v="as" aria-selected="'+(view==="as")+'">Assignments</button><button class="ntab" data-v="pl" aria-selected="'+(view==="pl")+'">Planner</button></div>'}
+function bindNav(){document.querySelectorAll("[data-v]").forEach(function(b){b.onclick=function(){view=b.dataset.v;amsg="";if(view==="as")assignView();else if(view==="pl")planView();else mainView()}})}
+function fsize(n){return n>1048576?(n/1048576).toFixed(1)+" MB":Math.max(1,Math.round(n/1024))+" KB"}
+function assignView(){
+  var h='<header><div><h1>Sri RV College</h1><p class="sub">Assignments</p></div><button id="out">Sign out</button></header>'+navHtml();
+  if(!A||!DB){
+    h+='<p class="hint">PDF uploads work when you open this page from your own claude.ai account while signed in. Open the page link from your account and come back to this tab.</p>';
+  }else{
+    h+='<section class="rep"><h2>Upload assignment (PDF)</h2><div class="edit"><input id="at" placeholder="Assignment title" aria-label="Assignment title"><select id="ab" aria-label="Batch"><option>KCET-2</option><option>MED-1</option><option>1st SRG-E</option></select><label for="ad">Due date</label><input id="ad" type="date"><input id="af" type="file" accept="application/pdf,.pdf" aria-label="PDF file"><div class="row"><button class="pri" id="aup">Upload PDF</button></div><p class="err" id="am" role="status">'+esc(amsg)+'</p></div></section>';
+    var list=items.filter(function(x){return abatch==="All"||x.batch===abatch});
+    h+='<div class="tabs">'+["All","KCET-2","MED-1","1st SRG-E"].map(function(b){return '<button class="ntab" data-b="'+b+'" aria-selected="'+(abatch===b)+'">'+b+'</button>'}).join("")+'</div>';
+    h+='<div class="sum"><h2>'+(abatch==="All"?"All batches":abatch)+'</h2><span>'+list.length+' PDF'+(list.length===1?'':'s')+'</span></div>';
+    if(!list.length)h+='<p class="hint">No assignments here yet. Add a title, choose a PDF and press Upload PDF.</p>';
+    list.forEach(function(x){
+      h+='<div class="slot"><div class="time">'+new Date(x.at||Date.now()).toLocaleDateString("en-IN",{day:"numeric",month:"short"})+'</div><div><b>'+esc(x.title||"Untitled")+'</b><small>'+esc(x.batch||"")+' · '+fsize(x.size||0)+(x.due?' · Due '+new Date(x.due+"T00:00").toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"}):'')+'</small></div><div class="act"><a class="btn" target="_blank" rel="noopener" href="/_blob/'+esc(x.assetId)+'">Open</a><button data-d="'+esc(x.id)+'">Delete</button></div></div>';
+    });
+  }
+  document.getElementById("app").innerHTML=h;bindNav();
+  document.getElementById("out").onclick=function(){authed=false;try{sessionStorage.removeItem(AUTH)}catch(e){}loginView()};
+  document.querySelectorAll("[data-b]").forEach(function(b){b.onclick=function(){abatch=b.dataset.b;assignView()}});
+  var up=document.getElementById("aup");
+  if(up)up.onclick=function(){
+    var t=document.getElementById("at").value.trim(),f=document.getElementById("af").files[0],m=document.getElementById("am");
+    if(!t||!f){m.textContent="Add a title and choose a PDF file.";return}
+    if(f.type!=="application/pdf"&&!/\.pdf$/i.test(f.name)){m.textContent="Only PDF files can be uploaded.";return}
+    up.disabled=true;m.textContent="Uploading…";
+    A.upload(f).then(function(r){
+      var id=Date.now().toString(36);
+      return DB.collection("assignments").doc(id).set({title:t,batch:document.getElementById("ab").value,due:document.getElementById("ad").value,assetId:r.id,size:r.sizeBytes||f.size,at:Date.now()});
+    }).then(function(){amsg="Uploaded.";assignView()}).catch(function(e){up.disabled=false;m.textContent="Upload failed ("+((e&&e.code)||"error")+"). Try again."});
+  };
+  document.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){
+    var x=items.filter(function(i){return i.id===b.dataset.d})[0];if(!x)return;b.disabled=true;
+    A.delete(x.assetId).catch(function(){}).then(function(){return DB.collection("assignments").doc(x.id).delete()}).then(function(){amsg="Deleted."}).catch(function(){amsg="Could not delete. Try again.";assignView()});
+  }});
+}
+var PLAN=[["2026-05-18","Motion in a straight line : introduction, Horizontal motion, Basic definitions, Distance, Displacement"],["2026-05-19","Average speed, average velocity 2.2 Instantaneous velocity and speed, 2.3 Acceleration"],["2026-05-20","kinematic equations in one dimensions (Uniformly accelerated case) Problems on kinematic equations"],["2026-05-21","kinematic equations in one dimensions (Non-Uniformly accelerated case) - Problems"],["2026-05-22","Motion curves , Problems based on Motion curves"],["2026-05-23","NEET/JEE/KCET/BOARDS EXAM"],["2026-05-24","WEEK OFF"],["2026-05-25","Introduction to calculus: Differentiation"],["2026-05-26","Problems based on Differentiation"],["2026-05-27","Integration, Problems based on Integration"],["2026-05-28","Acceleration due to gravity, Freely falling bodies"],["2026-05-29","Problems on the above topic"],["2026-05-30","NEET/JEE/KCET/BOARDS EXAM"],["2026-05-31","WEEK OFF"],["2026-06-01","Vertically projected bodies & Problems on the topic"],["2026-06-02","Relative motion in one dimension"],["2026-06-03","River board problem in 1D"],["2026-06-04","Motion in a plane: VECTORS 3.1 Introduction to vectors 3.2 Scalars and Vectors 3.2.1 Position and displacement vector 3.2.2 Equality of vectors 3.3 Multiplication of vectors by real numbers3.4 Addition and subtraction of vectors (graphical method) Problems"],["2026-06-05","Resolution of the vector & Problems"],["2026-06-06","NEET/JEE/KCET/BOARDS EXAM"],["2026-06-07","WEEK OFF"],["2026-06-08","Vector addition (Analytical method) Parallelogram and Triangle law"],["2026-06-09","Motion in a plane 3.7.1 Position vector and displacement vector, Velocity 3.8 Motion in a plane with constant acceleration - Problems"],["2026-06-10","Change in Velocity, Relative velocity in two dimensions,"],["2026-06-11","Rain-umbrella and Motion of boat in river"],["2026-06-12","Projectile motion from ground concept"],["2026-06-13","NEET/JEE/KCET/BOARDS EXAM"],["2026-06-14","WEEK OFF"],["2026-06-15","Applciations and problems"],["2026-06-16","Applciations and problems"],["2026-06-17","Projectile motion from top of tower concept"],["2026-06-18","Kinematics of uniform circular motion (Angular displacement, Angular velocity & Angular acceleration)"],["2026-06-19","Non uniform circular motion, Resultant acceleration"],["2026-06-20","NEET/JEE/KCET/BOARDS EXAM"],["2026-06-21","WEEK OFF"],["2026-06-22",",problems on above topic"],["2026-06-23","Laws of Motion 4.1 Introduction, 4.2 Aristotle Fallacy, 4.3. Law of Inertia, 4.4 Newton's 1st law,definition of force, Inertia and Mass, Types of Inertia"],["2026-06-24","5. Newton's 2nd law, Impulse and its applications"],["2026-06-25","Newton's 3rd Law, 4.9 common forces in mechanics, Contact forces (Normal reaction)"],["2026-06-26","MOHHARUM"],["2026-06-27","NEET/JEE/KCET/BOARDS EXAM"],["2026-06-28","WEEK OFF"],["2026-06-29","Tension in strings and ropes]"],["2026-06-30","Constrained motion (Pulley Problems)"],["2026-07-01","Spring force and problems on it"],["2026-07-02","Frame of references (Inertial & Non - inertial), Apparent weight, Pseudo force"],["2026-07-03","Applications & Problems on the above topics"],["2026-07-04","NEET/JEE/KCET/BOARDS EXAM"],["2026-07-05","WEEK OFF"],["2026-07-06","Law of conservation of linear momentum and Applications, Rocket propulsion"],["2026-07-07","Equlibrium of particle - Problems"],["2026-07-08","FRICTION Causes, Types of friction (Static and Kinetic), Uses,"],["2026-07-09","Laws of friction, Angle of friction, Friction on horizontal surface"],["2026-07-10","Friction on horizontal surface (remaining)"],["2026-07-11","NEET/JEE/KCET/BOARDS EXAM"],["2026-07-12","WEEK OFF"],["2026-07-13","Pushing and pulling and problems on the above topics Rolling friction, Methods of reducing friction"],["2026-07-14","Block on block concept and problems"],["2026-07-15","Friction on vertical surfaces and problems"],["2026-07-16","Motion on smooth inclined plane and Motion on rough inclined plane concepts, angle of repose concept"],["2026-07-17","Problems on the above topics"],["2026-07-18","NEET/JEE/KCET/BOARDS EXAM"],["2026-07-19","WEEK OFF"],["2026-07-20","Dynamics of Circular motion concept and applications"],["2026-07-21","Banking of roads, Angle of banking"],["2026-07-22","Work-Power-Energy 5.1 Introduction 5.1.1 Scalar Product"],["2026-07-23","Work 5.4 Kinetic energy and potential energy"],["2026-07-24","Work-Energy theorem concept and applications"],["2026-07-25","NEET/JEE/KCET/BOARDS EXAM"],["2026-07-26","WEEK OFF"],["2026-07-27","Work done by variable force 5.6 Work-Energy theorem for variable force and problems"],["2026-07-28","Concept of Potential Energy, Types of equilibrium"],["2026-07-29","P.E. of spring and related problems"],["2026-07-30","The Conservation of Mechanical Energy - freely falling body; vertically projected body"],["2026-07-31","Vertical circular motion"],["2026-08-01","NEET/JEE/KCET/BOARDS EXAM"],["2026-08-02","WEEK OFF"],["2026-08-03","UNIT TEST 01"],["2026-08-04","UNIT TEST 01"],["2026-08-05","UNIT TEST 01"],["2026-08-06","UNIT TEST 01"],["2026-08-07","UNIT TEST 01"],["2026-08-08","Vertical circular motion application"],["2026-08-09","WEEK OFF"],["2026-08-10","Power, its applications"],["2026-08-11","Problems on the above topic"],["2026-08-12","Introduction, Types of collisions, 5.11.1 Elastic & Inelastic collisions"],["2026-08-13","Collisions: 5.11 Introduction, Types of collisions, 5.11.1 Elastic & Inelastic collisions"],["2026-08-14","BOARDS EXAM"],["2026-08-15","INDIPENDANCE DAY"],["2026-08-16","WEEK OFF"],["2026-08-17","Collisions in one dimension, applications Coefficient of restitution, expressions for velocities and problems"],["2026-08-18","Applications on one dimensional elastic collisions"],["2026-08-19","Collisions in two dimension (Oblique collisions), Inelastic and perfect inelastic collisions"],["2026-08-20","Problems on above topic"],["2026-08-21","Problems on above topic"],["2026-08-22","NEET/JEE/KCET/BOARDS EXAM"],["2026-08-23","WEEK OFF"],["2026-08-24","System of particles and Rotational motion: 6.1 Introduction 6.1.1 What kind of motion can a rigid body have ? 6.2 Centre of mass Centre of Gravity,characteristics of center of mass"],["2026-08-25","Methods of determining C.M of point masses and continuous mass distribution"],["2026-08-26","ONAM/MILAD UN NABI"],["2026-08-27","Problems on above topic"],["2026-08-28","Motion of centre of mass (Velocity, acceleration, momentum and force)"],["2026-08-29","NEET/JEE/KCET/BOARDS EXAM"],["2026-08-30","WEEK OFF"],["2026-08-31","Linear momentum of system of particles 6.5 Vector product of two vectors 6.6 Angular velocity and its relation with linear velocity, 6.6.1. Angular acceleration"],["2026-09-01","Kinematics of rotational motion about a fixed axis and problem"],["2026-09-02","Moment of inertia For point masses and continuous mass distribution, problems"],["2026-09-03","Moment of inertia For point masses and continuous mass distribution, problems"],["2026-09-04","Theorems of perpendicular and parallel axes and applications of perpendicular and parallel axes theorems"],["2026-09-05","NEET/JEE/KCET/BOARDS EXAM"],["2026-09-06","WEEK OFF"],["2026-09-07","Problems on the above topics"],["2026-09-08","Problems on the above topics"],["2026-09-09","Torque and its applications about fixed axis and Problems,"],["2026-09-10","Torque and its applications about fixed axis rotation and Problems"],["2026-09-11","Equilibrium of rigid body 6.8.1 Principle of moments, Centre of Gravity Experiment-4: Metre Scale - the mass of a given object by the principle of moments"],["2026-09-12","NEET/JEE/KCET/BOARDS EXAM"],["2026-09-13","WEEK OFF"],["2026-09-14","GANESH CHAVITHI"],["2026-09-15","Dynamics of rotational motion about a fixed axis, Toppling concept and problems"],["2026-09-16","Angular momentum, Angular momentum of rigid body in case of rotation about a fixed axis"],["2026-09-17",".1 law of conservation of angular momentum and its applications & Problems Angular impulse, Rotational work, Rotational kinetic energy"],["2026-09-18","General motion in a plane (Translation + Rotation)"],["2026-09-19","NEET/JEE/KCET/BOARDS EXAM"],["2026-09-20","WEEK OFF"],["2026-09-21","Rolling motion and its applications, Problems on the above topics"],["2026-09-22","Kinetic energy in Rolling motion on an inclined plane"],["2026-09-23","GRAVITATION 7.1 Introduction, Universal law of gravitation"],["2026-09-24","MID TERM EXAMS"],["2026-09-25","MID TERM EXAMS"],["2026-09-26","MID TERM EXAMS"],["2026-09-27","MID TERM EXAMS"],["2026-09-28","MID TERM EXAMS"],["2026-09-29","MID TERM EXAMS"],["2026-09-30","MID TERM EXAMS"],["2026-10-01","MID TERM EXAMS"],["2026-10-02","MID TERM EXAMS"],["2026-10-03","MID TERM EXAMS"],["2026-10-04","MID TERM EXAMS"],["2026-10-05","MID TERM EXAMS"],["2026-10-06","MID TERM EXAMS"],["2026-10-07","MID TERM EXAMS"],["2026-10-08","MID TERM EXAMS"],["2026-10-09","MID TERM EXAMS"],["2026-10-10","MID TERM EXAMS"],["2026-10-11","WEEK OFF"],["2026-10-12","problems on above topics"],["2026-10-13","Acceleration due to gravity of the earth 7.6 Acceleration due to gravity below and above the surface of earth variation of 'g' with latitude, Variation of 'g' with shape"],["2026-10-14","problems on above topics"],["2026-10-15","7.2 Kepler's laws"],["2026-10-16","Gravitation field due to point masses and conitnuous mass distribution"],["2026-10-17","NEET/JEE/KCET/BOARDS EXAM"],["2026-10-18","WEEK OFF"],["2026-10-19","DUSSERA HOLIDAYS"],["2026-10-20","DUSSERA HOLIDAYS"],["2026-10-21","DUSSERA HOLIDAYS"],["2026-10-22","DUSSERA HOLIDAYS"],["2026-10-23","Gravitational potential energy Due to point masses, the gravitational self potential energy and problems"],["2026-10-24","Escape speed 7.9 Earth satellite Orbital velocity 7.10 Energy of orbiting satellite"],["2026-10-25","WEEK OFF"],["2026-10-26","VALMIKI JAYANTHI"],["2026-10-27","Problems on above topics"],["2026-10-28","Mechanical Properties Of Solids 8.1Introduction, Elastic Behaviour Of Solids 8.2 Stress And Strain"],["2026-10-29","Types of stresses and strains, 8.3 Hooke's law 8.4 Stress and strain curve"],["2026-10-30","Modulus of Elasticity (8.5.1 Young's Modulus, 8.5.2 Shear Modulus, 8.5.3 Bulk Modulus)"],["2026-10-31","NEET/JEE/KCET/BOARDS EXAM"],["2026-11-01","WEEK OFF"],["2026-11-02","Experiment-5: Young's modulus of elasticity of the material of a metallic wire. Applications and Problems on the above topics"],["2026-11-03","4 Relation between Poissons ratio, compressibility, modulus of elasticities"],["2026-11-04","Applications of Elastic behavior of Materials"],["2026-11-05","Mechanical Properties Of Fluids 9.1 Introduction, Properties of Fluids, Density of Fluid 9.2 Pressure"],["2026-11-06","Variation of Pressure with depth in a liquid column 9.2.3 Atmospheric pressure and Gauge pressure Hydro static force"],["2026-11-07","NEET/JEE/KCET/BOARDS EXAM"],["2026-11-08","WEEK OFF"],["2026-11-09","DIWALI"],["2026-11-10","Pressure in a liquid when a container moving with acceleration barometer, manometer"],["2026-11-11","Pascal's law 9.2.4 Hydraulic machines (Hydraulic lift ) Problems on the above topics"],["2026-11-12","Archimede's principle ,Buoyancy and Buoyant force"],["2026-11-13","Equilibrium of floating bodies"],["2026-11-14","NEET/JEE/KCET/BOARDS EXAM"],["2026-11-15","WEEK OFF"],["2026-11-16","Stremaline flow and turbulant flow, Reynolds number, Continuity equation 9.4 Bernoulli's principle"],["2026-11-17","Application of Bernoulli's principle [9.4.1 Speed of Efflux (Torricelli's Theorem), 9.4.2 Dynamic lift, Magnus effect]"],["2026-11-18","problems on above topics"],["2026-11-19","Viscocity, Types of Viscocity, 9.5.1 Stokes law, Terminal Velocity and problems"],["2026-11-20","Surface tension Molecular theory of surface tension Applications of force due to surface tension"],["2026-11-21","NEET/JEE/KCET/BOARDS EXAM"],["2026-11-22","WEEK OFF"],["2026-11-23","Pressure in a liquid drops Excess pressure: Excess pressure in soap bubble, liquid drop, Air bubble in liquid"],["2026-11-24","Angle of contact 9.6.5 Capilarity,determination of surface tension by capilary raise method"],["2026-11-25","Experiment-6: Surface tension of water by capillary rise and effect of detergents. Problems on the above topic"],["2026-11-26","1 Thermal Properties Of Matter Introduction 10.2 Temperature and Heat 10.3. Measurement Of Temperature, Different temperature scales and relation between them."],["2026-11-27","Problems on the above topics"],["2026-11-28","NEET/JEE/KCET/BOARDS EXAM"],["2026-11-29","WEEK OFF"],["2026-11-30","Thermal expansion. Thermal expansion of solids and applications"],["2026-12-01","Problems on the above topic"],["2026-12-02","Thermal expansion of liquids,"],["2026-12-03","Anomalous expansion of water and applications"],["2026-12-04","Problems on above topics"],["2026-12-05","NEET/JEE/KCET/BOARDS EXAM"],["2026-12-06","WEEK OFF"],["2026-12-07","Ideal gas equation and absolute temperature Thermal expansion of gases, Gas laws"],["2026-12-08","problems on above topics"],["2026-12-09","Specific heat capacity Thermal capacity, Water equivalent of a substance 10.7 Calorimetry and problems"],["2026-12-10","UNIT TEST 2"],["2026-12-11","UNIT TEST 2"],["2026-12-12","UNIT TEST 2"],["2026-12-13","WEEK OFF"],["2026-12-14","UNIT TEST 2"],["2026-12-15","Change of state, 10.8.1 Latent heat Melting point and boiling point, triple point of water"],["2026-12-16","Experiment-9: Specific heat capacity of a given (i) solid and (ii) liquid by method of mixtures."],["2026-12-17","Problems on above topic"],["2026-12-18","Heat transfer 10.9.1 Conduction Heat transfer due to conduction concept"],["2026-12-19","NEET/JEE/KCET/BOARDS EXAM"],["2026-12-20","WEEK OFF"],["2026-12-21","Problems on above topic"],["2026-12-22","Heat transfer due to convection Types of convection & Applications 10.9.3 Heat transfer due to radiation Properties of thermal radiation"],["2026-12-23","Black body radiation Basic definitions (Absorptive power, Emissive power, Reflectance, Absorptance, Transmittance, Emissivity, Relative emissivity)Weins law"],["2026-12-24","Newton's law of cooling Problems on the above topic"],["2026-12-25","CHRISTAMAS"],["2026-12-26","NEET/JEE/KCET/BOARDS EXAM"],["2026-12-27","WEEK OFF"],["2026-12-28","Kinetic theory 12.1 Introduction 12.2 Molecular nature of matter 12.3 Behaviour of gases"],["2026-12-29","Kinetic theory of an ideal gas 12.4.1 Pressure of an ideal gas Avagadro's number Kinetic energy of an ideal gas 12.4.2 Kinetic interpretation of temperature"],["2026-12-30","Degrees of freedom 12.5 Law of equipartition of energy Problems on Gas laws and ideal gas equation Vrms, Vaverage, Vmostpropable velocities"],["2026-12-31","Specific heat capacity, (12.6.1 Mono-atomic gases, 12.6.2 Di-atomic gases, 12.6.3 Poly-atomic gases, 12.6.4 Specific heat capacity of solids) 12.7 Mean free path"],["2027-01-01","Thermodynamics (9 × 2 = 18): 11.1 Introduction 11.2 Thermal equilibrium (Different types of equilibrium) 11.3 Zeroth law of thermodynamics Joule's Law of heat & applications"],["2027-01-02","NEET/JEE/KCET/BOARDS EXAM"],["2027-01-03","WEEK OFF"],["2027-01-04","Heat, internal energy and work 11.5 First law of thermodynamics Sign Conventions, Applications in melting and boiling process 11.7 Thermodynamic state variables and equation of state"],["2027-01-05","Problems on the above topics"],["2027-01-06","1.6 Molar specific heat capacity Avagadro's number Different molar specific heats ( Cp,Cv, γ ,Cpoyltropic,Cmixtures)"],["2027-01-07","1.8 Different thermodynamics process Quasi - static process (Isobaric, Isochoric, Isothermal processes)"],["2027-01-08","Different thermodynamics process Quasi - static process (Isobaric, Isochoric, Isothermal processes)"],["2027-01-09","NEET/JEE/KCET/BOARDS EXAM"],["2027-01-10","WEEK OFF"],["2027-01-11","Different thermodynamics process and problems (Adiabatic, Polytropic, Free expansion), Cyclic process"],["2027-01-12","Problems on above topic"],["2027-01-13","Second law thermodynamics 11.10 Reversible and irreversible processes Problems on the above topics"],["2027-01-14","SANKRANTHI"],["2027-01-15","SANKRANTHI"],["2027-01-16","SANKRANTHI"],["2027-01-17","SANKRANTHI"],["2027-01-18","SANKRANTHI"],["2027-01-19","Oscillations: 13.1 Introduction 13.2 Periodic and oscillatory motions 13.3 Simple harmonic motion"],["2027-01-20","SHM and Uniform circular motion"],["2027-01-21","Velocity and acceleration in simple harmonic motion Force law for simple harmonic motion Problems on the above topics"],["2027-01-22","Energy of SHM and problems"],["2027-01-23","NEET/JEE/KCET/BOARDS EXAM"],["2027-01-24","Oscillations of Simple pendulum;Applications of simple pendulum"],["2027-01-25","Oscillations of spring pendulum and its applications"],["2027-01-26","Physical pendulum torsional pendulum and different oscillating system"],["2027-01-27",""],["2027-01-28",""],["2027-01-29",""],["2027-01-30","NEET/JEE/KCET/BOARDS EXAM"],["2027-01-31","WEEK OFF"]];
+var PM={};PLAN.forEach(function(r){PM[r[0]]=r[1]});
+var PL={class:"Class day",test:"Unit test",exam:"Exam day",hol:"Holiday",off:"Week off",tbd:"Not planned"};
+var pmonth=null;
+function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function ptype(t){if(!t)return "tbd";if(/WEEK OFF/.test(t))return "off";if(/UNIT TEST/.test(t))return "test";if(/EXAM/.test(t))return "exam";if(/MOHHARUM|INDIPENDANCE|ONAM|GANESH|DUSSERA|VALMIKI|DIWALI|CHRISTAMAS|SANKRANTHI/.test(t))return "hol";return "class"}
+function mlabel(m){return new Date(m+"-01T00:00").toLocaleDateString("en-IN",{month:"short",year:"numeric"})}
+function planView(){
+  var months=[];PLAN.forEach(function(r){var m=r[0].slice(0,7);if(months.indexOf(m)<0)months.push(m)});
+  var now=new Date(),td=iso(now),cur=td.slice(0,7);
+  if(!pmonth)pmonth=months.indexOf(cur)>=0?cur:months[0];
+  var rows=PLAN.filter(function(r){return r[0].slice(0,7)===pmonth});
+  var c={class:0,test:0,exam:0,hol:0,off:0,tbd:0};rows.forEach(function(r){c[ptype(r[1])]++});
+  var mins=c.class*285;
+  var h='<header><div><h1>Sri RV College</h1><p class="sub">1st PUC Physics planner, May 2026 \u2013 Jan 2027</p></div><button id="out">Sign out</button></header>'+navHtml();
+  h+='<div class="tabs">'+months.map(function(m){return '<button class="ntab m" data-m="'+m+'" aria-selected="'+(m===pmonth)+'">'+mlabel(m)+'</button>'}).join("")+'</div>';
+  h+='<div class="sum"><h2>'+mlabel(pmonth)+'</h2><span>'+c.class+' class days \u00b7 '+Math.floor(mins/60)+' h '+mins%60+' min teaching \u00b7 '+(c.test+c.exam)+' test/exam \u00b7 '+(c.hol+c.off)+' holiday/off</span></div>';
+  rows.forEach(function(r){
+    var t=ptype(r[1]),d=new Date(r[0]+"T00:00"),isT=r[0]===td;
+    h+='<div class="slot'+(t!=="class"?' brk':'')+(isT?' live':'')+'"'+(isT?' id="ptoday"':'')+'><div class="time">'+d.toLocaleDateString("en-IN",{day:"numeric",month:"short"})+'<br><small>'+d.toLocaleDateString("en-IN",{weekday:"short"})+'</small></div><div><b>'+esc(r[1]||"Not planned yet")+'</b></div><div class="act"><span class="chip '+(t==="class"?'done':'')+'">'+(isT?'Today \u00b7 ':'')+PL[t]+'</span></div></div>';
+  });
+  document.getElementById("app").innerHTML=h;bindNav();
+  document.getElementById("out").onclick=function(){authed=false;try{sessionStorage.removeItem(AUTH)}catch(e){}loginView()};
+  document.querySelectorAll("[data-m]").forEach(function(b){b.onclick=function(){pmonth=b.dataset.m;planView()}});
+  var el=document.getElementById("ptoday");if(el&&el.scrollIntoView)el.scrollIntoView({block:"center"});
+}
+function initCaps(){
+  if(!(window.claude&&window.claude.use))return;
+  Promise.all([window.claude.use("assets"),window.claude.use("db")]).then(function(r){
+    A=r[0];DB=r[1];
+    if(DB)DB.collection("assignments").onSnapshot(function(sn){
+      items=sn.docs.map(function(d){var x=d.data()||{};x.id=d.id;return x}).sort(function(a,b){return (b.at||0)-(a.at||0)});
+      if(authed&&view==="as")assignView();
+    },function(){});
+    if(authed&&view==="as")assignView();
+  }).catch(function(){});
+}
+setInterval(function(){if(authed&&editing===null&&view==="tt")mainView()},60000);
+initCaps();
+if(authed)mainView();else loginView();
+</script>
+</body>
+</html>
